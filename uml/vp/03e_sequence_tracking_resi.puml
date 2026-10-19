@@ -1,0 +1,60 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Admin Ekspedisi" as AE
+participant "Browser" as BR
+participant "ResiController" as RC
+participant "Resi Model" as RM
+database "Database" as DB
+
+group 1. Pencarian & Filter Resi
+    AE -> BR : Masukkan No. Resi / Pengirim / Penerima & Klik Cari
+    BR -> RC : GET /resi?search={keyword}&status={status}
+    activate RC
+    RC -> RM : where('nomor_resi', 'like', %keyword%)...
+    activate RM
+    RM -> DB : SELECT * FROM resi WHERE nomor_resi LIKE %keyword%...
+    activate DB
+    DB --> RM : Data Resi yang Sesuai
+    deactivate DB
+    RM --> RC : $resis
+    deactivate RM
+
+    alt Data Resi Ditemukan
+        RC -> BR : Tampilkan Daftar Hasil Pencarian
+        BR --> AE : Lihat Hasil Pencarian Resi
+    else Data Resi Tidak Ditemukan
+        RC -> BR : Tampilkan Informasi "Data resi tidak ditemukan"
+        BR --> AE : Pesan Kosong / Not Found
+    end
+    deactivate RC
+end
+
+group 2. Lihat Detail & Timeline Tracking Resi
+    AE -> BR : Klik Tombol Detail pada Resi
+    BR -> RC : GET /resi/{id}
+    activate RC
+    RC -> RM : findOrFail($id)
+    activate RM
+    RM -> DB : SELECT * FROM resi WHERE id = $id
+    activate DB
+    DB --> RM : Data Lengkap Resi & Status
+    deactivate DB
+    RM --> RC : $resi
+    deactivate RM
+    RC -> BR : return view('resi.show', compact('resi'))
+    deactivate RC
+    BR --> AE : Tampilkan Detail Paket & Status Timeline\n(Tiba di Cabang -> Diproses -> Dibawa Kurir -> Selesai)
+end
+
+@enduml

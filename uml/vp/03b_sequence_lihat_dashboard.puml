@@ -1,0 +1,100 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "User\n(KC / Admin)" as US
+participant "Browser" as BR
+participant "DashboardController" as DC
+participant "Resi Model" as RM
+participant "Income Model" as IM
+participant "Expense Model" as EM
+database "Database" as DB
+
+US -> BR : Klik Menu Dashboard
+activate US
+activate BR
+
+BR -> DC : GET /dashboard
+activate DC
+
+group 1. Query Metrik Pengiriman Hari Ini
+    DC -> RM : whereDate('created_at', today)->count()
+    activate RM
+    RM -> DB : SELECT COUNT(*) FROM resi WHERE date = today
+    activate DB
+    DB --> RM : Total paket masuk
+    RM --> DC : $totalPaketMasuk
+
+    DC -> RM : where('status', 'selesai')->count()
+    RM -> DB : SELECT COUNT(*) FROM resi WHERE status = 'selesai'
+    DB --> RM : Total paket selesai
+    deactivate DB
+    RM --> DC : $totalPaketSelesai
+    deactivate RM
+end
+
+group 2. Query Finansial & Tren 7 Hari Terakhir
+    DC -> IM : whereDate('tanggal', today)->sum('nominal')
+    activate IM
+    IM -> DB : SELECT SUM(nominal) FROM incomes
+    activate DB
+    DB --> IM : Total pemasukan hari ini
+    IM --> DC : $totalPendapatan
+
+    DC -> IM : Query sum pemasukan per hari (7 hari terakhir)
+    IM -> DB : SELECT tanggal, SUM(nominal) FROM incomes GROUP BY tanggal
+    DB --> IM : Data pemasukan 7 hari
+    deactivate DB
+    IM --> DC : $chartPemasukan
+    deactivate IM
+
+    DC -> EM : whereDate('tanggal', today)->sum('nominal')
+    activate EM
+    EM -> DB : SELECT SUM(nominal) FROM expenses
+    activate DB
+    DB --> EM : Total pengeluaran hari ini
+    EM --> DC : $totalPengeluaran
+
+    DC -> EM : Query sum pengeluaran per hari (7 hari terakhir)
+    EM -> DB : SELECT tanggal, SUM(nominal) FROM expenses GROUP BY tanggal
+    DB --> EM : Data pengeluaran 7 hari
+    deactivate DB
+    EM --> DC : $chartPengeluaran
+    deactivate EM
+
+    DC -> DC : Hitung Laba/Rugi\n($totalPendapatan - $totalPengeluaran)
+end
+
+group 3. Query Distribusi Status & Resi Terbaru
+    DC -> RM : latest()->take(5)->get()
+    activate RM
+    RM -> DB : SELECT * FROM resi ORDER BY created_at DESC LIMIT 5
+    activate DB
+    DB --> RM : Data 5 resi terbaru
+    RM --> DC : $recentResis
+
+    DC -> RM : Hitung jumlah paket per status
+    RM -> DB : SELECT status, COUNT(*) FROM resi GROUP BY status
+    DB --> RM : Data distribusi status
+    deactivate DB
+    RM --> DC : $statusCounts
+    deactivate RM
+end
+
+DC -> BR : return view('dashboard', $dataMetrics)
+deactivate DC
+
+BR --> US : Tampilkan Metrik, Grafik Tren,\n& Ringkasan Pengiriman
+deactivate BR
+deactivate US
+
+@enduml

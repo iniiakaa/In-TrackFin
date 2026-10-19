@@ -1,0 +1,877 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* ========================================================
+   INVENTERA DESIGN SYSTEM TOKENS - MATERIAL DESIGN 3
+   ======================================================== */
+:root {
+    --color-primary: #0058bc;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #0070eb;
+    --color-on-primary-container: #fefcff;
+    --color-primary-fixed: #d8e2ff;
+    --color-primary-fixed-dim: #adc6ff;
+    --color-on-primary-fixed: #001a41;
+    --color-on-primary-fixed-variant: #004493;
+
+    --color-secondary: #006e28;
+    --color-on-secondary: #ffffff;
+    --color-secondary-container: #6ffb85;
+    --color-on-secondary-container: #00732a;
+    --color-secondary-fixed: #72fe88;
+    --color-secondary-fixed-dim: #53e16f;
+    --color-on-secondary-fixed: #002107;
+    --color-on-secondary-fixed-variant: #00531c;
+
+    --color-tertiary: #9e3d00;
+    --color-on-tertiary: #ffffff;
+    --color-tertiary-container: #c64f00;
+    --color-on-tertiary-container: #fffbff;
+    --color-tertiary-fixed: #ffdbcc;
+    --color-tertiary-fixed-dim: #ffb595;
+    --color-on-tertiary-fixed: #351000;
+    --color-on-tertiary-fixed-variant: #7c2e00;
+
+    --color-error: #ba1a1a;
+    --color-on-error: #ffffff;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+
+    --color-background: #fcf8fb;
+    --color-on-background: #1b1b1d;
+
+    --color-surface: #fcf8fb;
+    --color-on-surface: #1b1b1d;
+    --color-on-surface-variant: #414755;
+    --color-surface-container: #f0edef;
+    --color-surface-container-low: #f6f3f5;
+    --color-surface-container-high: #eae7ea;
+    --color-surface-container-highest: #e4e2e4;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-dim: #dcd9dc;
+    --color-surface-bright: #fcf8fb;
+    --color-surface-variant: #e4e2e4;
+    --color-surface-tint: #005bc1;
+
+    --color-outline: #717786;
+    --color-outline-variant: #c1c6d7;
+
+    --color-inverse-surface: #303032;
+    --color-inverse-on-surface: #f3f0f2;
+    --color-inverse-primary: #adc6ff;
+}
+
+/* ========================================================
+   BASE & RESET
+   ======================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 88, 188, 0.2) transparent;
+}
+
+body {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    display: inline-block;
+    vertical-align: -0.125em;
+    flex-shrink: 0;
+}
+
+/* ========================================================
+   PAGE TRANSITIONS & LOADER (INVENTERA SIGNATURE)
+   ======================================================== */
+body>*:not(#global-loader) {
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+}
+
+body.page-loaded>*:not(#global-loader) {
+    opacity: 1;
+}
+
+body.page-leaving>*:not(#global-loader) {
+    opacity: 0;
+}
+
+.slide-up-content {
+    transform: translateY(24px) scale(0.98);
+    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.page-loaded .slide-up-content {
+    transform: none;
+}
+
+body.page-leaving .slide-up-content {
+    transform: translateY(-16px) scale(0.99);
+}
+
+#global-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background-color: #fcf8fb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+}
+
+body.page-loaded #global-loader {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+body.page-leaving #global-loader {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease-in;
+}
+
+/* ========================================================
+   MESH BLOBS & BACKGROUND (INVENTERA SIGNATURE)
+   ======================================================== */
+.mesh-blob-1 {
+    background-color: #d8e2ff;
+    filter: blur(100px);
+}
+
+.mesh-blob-2 {
+    background-color: #ffdbcc;
+    filter: blur(120px);
+}
+
+.mesh-blob-3 {
+    background-color: #72fe88;
+    filter: blur(140px);
+    opacity: 0.3;
+}
+
+/* ========================================================
+   LIQUID GLASS (INVENTERA GLASSMORPHISM)
+   ======================================================== */
+.liquid-glass,
+.glass-card {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 1.5rem;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.03),
+        0 20px 40px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.liquid-glass-sm {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1rem;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* ========================================================
+   BUTTONS (INVENTERA PILL STYLE)
+   ======================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    box-shadow: 0 8px 16px rgba(0, 88, 188, 0.25);
+}
+
+.btn-primary:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(0, 88, 188, 0.32);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+.btn-ghost,
+.btn-secondary {
+    color: var(--color-on-surface);
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.btn-ghost:hover,
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.75);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    color: var(--color-error);
+    background: rgba(186, 26, 26, 0.08);
+    border: 1.5px solid var(--color-error);
+}
+
+.btn-danger:hover {
+    background: var(--color-error);
+    color: #ffffff;
+}
+
+.btn-success {
+    color: var(--color-secondary);
+    background: rgba(0, 110, 40, 0.08);
+    border: 1.5px solid var(--color-secondary);
+}
+
+.btn-success:hover {
+    background: var(--color-secondary);
+    color: #ffffff;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.875rem;
+    font-size: 13px;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: var(--color-on-surface-variant);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-icon:hover {
+    color: var(--color-on-surface);
+    background: rgba(255, 255, 255, 0.7);
+    transform: scale(1.05);
+}
+
+/* ========================================================
+   BADGES & CHIPS (INVENTERA PILL CHIPS)
+   ======================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+}
+
+.badge-primary {
+    background-color: var(--color-primary-fixed);
+    color: var(--color-on-primary-fixed);
+}
+
+.badge-success,
+.badge-selesai {
+    background-color: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+}
+
+.badge-warning,
+.badge-proses {
+    background-color: var(--color-tertiary-fixed);
+    color: var(--color-on-tertiary-fixed);
+}
+
+.badge-error {
+    background-color: var(--color-error-container);
+    color: var(--color-on-error-container);
+}
+
+.badge-tiba {
+    background-color: var(--color-primary-fixed);
+    color: var(--color-on-primary-fixed);
+}
+
+.badge-kurir {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+}
+
+.badge-neutral {
+    background-color: var(--color-surface-variant);
+    color: var(--color-on-surface-variant);
+}
+
+/* ========================================================
+   FORMS & INPUTS (INVENTERA REFINED INPUTS)
+   ======================================================== */
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-on-surface);
+    margin-bottom: 0.375rem;
+    letter-spacing: 0.01em;
+}
+
+.form-input,
+.form-select,
+textarea.form-input {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    border-radius: 9999px !important;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.5;
+    color: var(--color-on-surface) !important;
+    font-family: inherit !important;
+    outline: none !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(20px) saturate(2.2) brightness(1.06) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(2.2) brightness(1.06) !important;
+    box-shadow: 0 4px 16px rgba(0, 88, 188, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+}
+
+textarea.form-input {
+    border-radius: 1.25rem !important;
+    min-height: 6rem;
+    height: auto !important;
+    padding-top: 0.85rem !important;
+}
+
+.form-input:hover,
+.form-select:hover {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 2px 6px rgba(0, 88, 188, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+.form-input:focus,
+.form-select:focus,
+textarea.form-input:focus {
+    border-color: var(--color-primary) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 0 3px rgba(0, 88, 188, 0.15), 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+    outline: none !important;
+}
+
+.form-input::placeholder {
+    color: var(--color-on-surface-variant);
+    opacity: 0.55;
+    font-weight: 400;
+}
+
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23414755' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 0.85rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.15em 1.15em !important;
+    padding-right: 2.6rem !important;
+    cursor: pointer;
+}
+
+/* Date picker calendar indicator styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    margin-right: -0.25rem;
+    padding: 2px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ========================================================
+   CUSTOM GLASS SELECT (INVENTERA FROSTED GLASS DROPDOWN)
+   ======================================================== */
+.glass-select-native-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.glass-select-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.glass-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.625rem;
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) saturate(2.2) brightness(1.06) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(2.2) brightness(1.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 0 4px 16px rgba(0, 88, 188, 0.04), inset 0 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
+    border-radius: 9999px !important;
+    padding-left: 1.25rem;
+    padding-right: 1rem;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--color-on-surface) !important;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none !important;
+    box-sizing: border-box;
+}
+
+.glass-select-trigger:hover {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 2px 6px rgba(0, 88, 188, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+.glass-select-container.is-open .glass-select-trigger,
+.glass-select-trigger:focus-visible {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 88, 188, 0.15), 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+.glass-select-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    z-index: 50;
+    min-width: 100%;
+    width: max-content;
+    max-width: 340px;
+    opacity: 0;
+    transform: scale(0.94) translateY(-6px);
+    transition: opacity 0.22s cubic-bezier(0.32, 0.72, 0, 1), transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+    pointer-events: none;
+}
+
+.glass-select-menu.open {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+.glass-select-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+}
+
+.glass-select-option:hover {
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.glass-select-option.is-selected {
+    background: rgba(0, 88, 188, 0.08);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+@keyframes glassSelectFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.glass-select-menu.open .glass-select-option {
+    animation: glassSelectFadeIn 0.22s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* Fix: form inputs with leading icon have proportional left padding */
+.form-input[style*="padding-left"],
+.relative:has(> .material-symbols-outlined.absolute) .form-input,
+.relative>.material-symbols-outlined.absolute~.form-input,
+.relative>.material-symbols-outlined.absolute~input,
+.form-input.pl-12,
+.form-input[class*="pl-12"],
+.form-input.pl-10,
+.form-input[class*="pl-10"],
+.form-input.pl-11,
+.form-input[class*="pl-11"] {
+    padding-left: 2.65rem !important;
+}
+
+.relative:has(> .material-symbols-outlined.absolute) textarea.form-input,
+.relative>.material-symbols-outlined.absolute~textarea.form-input {
+    padding-left: 2.65rem !important;
+    padding-top: 0.85rem !important;
+}
+
+/* Fix: ikon absolut di dalam form input terpusat optikal sempurna & simetris di semua input */
+.relative>.material-symbols-outlined.absolute {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    translate: none !important;
+    --tw-translate-y: 0 !important;
+    left: 1rem !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 1 !important;
+    font-size: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    z-index: 10 !important;
+    margin: 0 !important;
+    color: var(--color-on-surface-variant);
+    opacity: 0.7;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Penyesuaian posisi ikon untuk textarea agar sejajar dengan baris pertama */
+.relative:has(textarea)>.material-symbols-outlined.absolute,
+.relative>.material-symbols-outlined.absolute:has(~ textarea) {
+    top: 0.85rem !important;
+    transform: none !important;
+    translate: none !important;
+    --tw-translate-y: 0 !important;
+    margin: 0 !important;
+}
+
+.relative:focus-within>.material-symbols-outlined.absolute {
+    color: var(--color-primary) !important;
+    opacity: 1 !important;
+}
+
+/* ========================================================
+   UNIFIED GLASS DROPDOWNS (INVENTERA FROSTED GLASS STYLE)
+   ======================================================== */
+.glass-dropdown,
+.notif-dropdown,
+.search-dropdown,
+.glass-select-menu {
+    background: rgba(246, 248, 255, 0.42) !important;
+    backdrop-filter: blur(20px) saturate(2.2) brightness(1.06) contrast(0.96) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(2.2) brightness(1.06) contrast(0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    border-radius: 20px !important;
+    box-shadow:
+        0 8px 32px rgba(0, 88, 188, 0.08),
+        0 30px 60px rgba(0, 0, 0, 0.1),
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.98),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
+    overflow: clip !important;
+    position: relative;
+}
+
+.glass-dropdown::before,
+.notif-dropdown::before,
+.search-dropdown::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(140deg,
+            rgba(255, 255, 255, 0.45) 0%,
+            rgba(255, 255, 255, 0.06) 45%,
+            rgba(180, 205, 255, 0.08) 75%,
+            rgba(255, 255, 255, 0.25) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glass-dropdown>*,
+.notif-dropdown>*,
+.search-dropdown>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Scrollbar dalam dropdown */
+.glass-dropdown ::-webkit-scrollbar,
+.notif-dropdown ::-webkit-scrollbar,
+.search-dropdown ::-webkit-scrollbar {
+    width: 4px;
+}
+
+.glass-dropdown ::-webkit-scrollbar-track,
+.notif-dropdown ::-webkit-scrollbar-track,
+.search-dropdown ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.glass-dropdown ::-webkit-scrollbar-thumb,
+.notif-dropdown ::-webkit-scrollbar-thumb,
+.search-dropdown ::-webkit-scrollbar-thumb {
+    background: rgba(0, 88, 188, 0.2);
+    border-radius: 9999px;
+}
+
+
+/* ========================================================
+   TABLES (INVENTERA GLASS TABLES)
+   ======================================================== */
+.data-table,
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+}
+
+.data-table thead tr,
+.table thead tr {
+    background: rgba(0, 88, 188, 0.04);
+}
+
+.data-table thead th,
+.table th {
+    padding: 1rem 1.25rem;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-on-surface-variant);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.data-table tbody tr,
+.table tbody tr {
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    transition: background-color 0.15s ease;
+}
+
+.data-table tbody tr:hover,
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.data-table tbody td,
+.table td {
+    padding: 1rem 1.25rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-on-surface);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* ========================================================
+   METRIC & STAT CARDS (INVENTERA MD3 STYLE)
+   ======================================================== */
+.metric-card,
+.stat-card {
+    background-color: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.03),
+        0 20px 40px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover,
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.06),
+        0 24px 48px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    flex-shrink: 0;
+}
+
+.icon-circle-primary {
+    background: rgba(0, 88, 188, 0.12);
+    color: var(--color-primary);
+}
+
+.icon-circle-secondary {
+    background: rgba(0, 110, 40, 0.12);
+    color: var(--color-secondary);
+}
+
+.icon-circle-tertiary {
+    background: rgba(158, 61, 0, 0.12);
+    color: var(--color-tertiary);
+}
+
+.icon-circle-error {
+    background: rgba(186, 26, 26, 0.12);
+    color: var(--color-error);
+}
+
+/* ========================================================
+   ALERTS / NOTIFICATIONS
+   ======================================================== */
+.alert {
+    padding: 0.875rem 1.25rem;
+    border-radius: 1rem;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    backdrop-filter: blur(20px);
+}
+
+.alert-success {
+    background: rgba(111, 251, 133, 0.2);
+    color: #00732a;
+    border: 1px solid rgba(0, 110, 40, 0.2);
+}
+
+.alert-error {
+    background: rgba(255, 218, 214, 0.6);
+    color: #ba1a1a;
+    border: 1px solid rgba(186, 26, 26, 0.2);
+}
+
+.alert-warning {
+    background: rgba(255, 219, 204, 0.5);
+    color: #9e3d00;
+    border: 1px solid rgba(158, 61, 0, 0.2);
+}
+
+/* ========================================================
+   PAGINATION & SCROLLBAR
+   ======================================================== */
+.pagination-wrapper nav>div:first-child {
+    display: none;
+}
+
+.pagination-wrapper nav>div:last-child span,
+.pagination-wrapper nav>div:last-child a {
+    background: rgba(255, 255, 255, 0.5) !important;
+    color: var(--color-on-surface) !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    border-radius: 9999px !important;
+    margin: 0 2px !important;
+}
+
+.pagination-wrapper nav>div:last-child span[aria-current="page"] span {
+    background: var(--color-primary) !important;
+    color: white !important;
+    border-color: var(--color-primary) !important;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 88, 188, 0.2);
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 88, 188, 0.4);
+}

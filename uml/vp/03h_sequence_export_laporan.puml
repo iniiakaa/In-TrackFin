@@ -1,0 +1,91 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Admin Accounting" as AA
+participant "Browser" as BR
+participant "ReportController" as RC
+participant "Income Model" as IM
+participant "Expense Model" as EM
+participant "DomPDF Engine" as PDF
+database "Database" as DB
+
+AA -> BR : Pilih Filter Periode & Klik Export (PDF / Excel)
+activate AA
+activate BR
+
+alt 1. Export PDF
+    BR -> RC : GET /reports/export-pdf?filter={filter}&tanggal={date}
+    activate RC
+    
+    RC -> IM : whereBetween('tanggal', [$startDate, $endDate])->get()
+    activate IM
+    IM -> DB : SELECT * FROM incomes WHERE tanggal BETWEEN ? AND ?
+    activate DB
+    DB --> IM : Data Pemasukan
+    deactivate DB
+    IM --> RC : $incomes
+    deactivate IM
+
+    RC -> EM : whereBetween('tanggal', [$startDate, $endDate])->get()
+    activate EM
+    EM -> DB : SELECT * FROM expenses WHERE tanggal BETWEEN ? AND ?
+    activate DB
+    DB --> EM : Data Pengeluaran
+    deactivate DB
+    EM --> RC : $expenses
+    deactivate EM
+
+    RC -> RC : Hitung Total & Laba/Rugi\n($totalPemasukan - $totalPengeluaran)
+
+    RC -> PDF : Pdf::loadView('reports.pdf', $data)
+    activate PDF
+    PDF --> RC : Render File PDF ($pdf)
+    deactivate PDF
+
+    RC -> BR : return $pdf->download('laporan-laba-rugi.pdf')
+    deactivate RC
+    BR --> AA : Unduh Dokumen PDF
+
+else 2. Export Excel / CSV
+    BR -> RC : GET /reports/export-excel?filter={filter}&tanggal={date}
+    activate RC
+
+    RC -> IM : whereBetween('tanggal', [$startDate, $endDate])->get()
+    activate IM
+    IM -> DB : SELECT * FROM incomes WHERE tanggal BETWEEN ? AND ?
+    activate DB
+    DB --> IM : Data Pemasukan
+    deactivate DB
+    IM --> RC : $incomes
+    deactivate IM
+
+    RC -> EM : whereBetween('tanggal', [$startDate, $endDate])->get()
+    activate EM
+    EM -> DB : SELECT * FROM expenses WHERE tanggal BETWEEN ? AND ?
+    activate DB
+    DB --> EM : Data Pengeluaran
+    deactivate DB
+    EM --> RC : $expenses
+    deactivate EM
+
+    RC -> RC : Susun Header Kolom & Format Baris CSV/Spreadsheet
+
+    RC -> BR : Response Download ('laporan-laba-rugi.csv')
+    deactivate RC
+    BR --> AA : Unduh Dokumen Spreadsheet (CSV/Excel)
+end
+
+deactivate BR
+deactivate AA
+
+@enduml

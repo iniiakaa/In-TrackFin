@@ -1,0 +1,43 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Admin Accounting|
+start
+:Buka Menu Laporan Laba Rugi;
+
+|System|
+:Menampilkan Form Filter;
+
+|Admin Accounting|
+:Pilih Filter (Hari/Minggu/Bulan) & Tanggal;
+:Klik Tampilkan;
+
+|System|
+:Query Pemasukan & Pengeluaran;
+:Hitung Total & Laba/Rugi;
+:Menampilkan Laporan ke Layar;
+
+|Admin Accounting|
+:Pilih Aksi Lanjutan;
+
+if (Pilih Export?) then (Export PDF)
+    |System|
+    :Generate File PDF;
+    :Download File PDF;
+else if (Export Excel)
+    |System|
+    :Generate File Excel/CSV;
+    :Download File Excel;
+else (Selesai/Tutup)
+endif
+
+|Admin Accounting|
+stop
+@enduml

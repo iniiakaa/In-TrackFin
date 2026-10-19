@@ -1,0 +1,43 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Admin Accounting|
+start
+:Buka Menu Kelola Pengeluaran;
+
+|Sistem|
+:Menampilkan Daftar Pengeluaran\n& Ringkasan Biaya Operasional;
+
+|Admin Accounting|
+:Pilih Aksi pada Pengeluaran;
+
+|Sistem|
+if (Aksi yang Dipilih?) then (Tambah Pengeluaran)
+    |Admin Accounting|
+    :Input Tanggal, Kategori, Nominal,\n& Keterangan;
+    |Sistem|
+    :Validasi Input Data;
+    :Simpan Pengeluaran ke Database;
+else if (Edit Pengeluaran)
+    |Admin Accounting|
+    :Ubah Data Pengeluaran & Simpan;
+    |Sistem|
+    :Validasi Input & Update Database;
+else (Hapus Pengeluaran)
+    |Admin Accounting|
+    :Konfirmasi Hapus Pengeluaran;
+    |Sistem|
+    :Hapus Data dari Database;
+endif
+
+:Tampilkan Notifikasi Sukses;
+:Refresh & Tampilkan Daftar Pengeluaran;
+stop
+@enduml

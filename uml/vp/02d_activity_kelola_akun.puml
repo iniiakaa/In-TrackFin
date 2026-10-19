@@ -1,0 +1,47 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Kepala Cabang|
+start
+:Buka Menu Kelola Akun;
+
+|Sistem|
+:Menampilkan Daftar Akun Pengguna;
+
+|Kepala Cabang|
+:Pilih Aksi pada Akun;
+
+|Sistem|
+if (Aksi yang Dipilih?) then (Tambah Akun)
+    |Kepala Cabang|
+    :Input Data Akun Baru & Simpan;
+    |Sistem|
+    :Validasi Input & Hash Password;
+    :Simpan Akun ke Database;
+else if (Edit Akun)
+    |Kepala Cabang|
+    :Ubah Data Akun & Simpan;
+    |Sistem|
+    :Validasi Input & Update Database;
+else (Hapus Akun)
+    |Kepala Cabang|
+    :Konfirmasi Hapus Akun;
+    |Sistem|
+    if (Akun Milik Sendiri?) then (Ya)
+        :Tampilkan Pesan Error\n(Aksi Ditolak);
+    else (Tidak)
+        :Hapus Akun dari Database;
+    endif
+endif
+
+:Tampilkan Notifikasi;
+:Refresh & Tampilkan Daftar Akun;
+stop
+@enduml

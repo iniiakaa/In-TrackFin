@@ -1,0 +1,90 @@
+@startuml
+' Deployment Diagram In-TrackFin - Style 1 (Model Dahlia: Modul & Tabel)
+scale max 1920 width
+
+skinparam roundcorner 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam defaultTextAlignment center
+
+skinparam frame {
+    BorderColor #000000
+    BackgroundColor #FFFFFF
+    FontSize 11
+}
+
+skinparam node {
+    BorderColor #2980B9
+    BackgroundColor #6EC5ED
+    HeaderBackgroundColor #56B4E2
+    FontColor #000000
+}
+
+skinparam artifact {
+    BorderColor #2980B9
+    BackgroundColor #FFFFFF
+    FontColor #000000
+    FontSize 10
+}
+
+skinparam component {
+    BorderColor #2980B9
+    BackgroundColor #FFFFFF
+    FontColor #000000
+    FontSize 10
+}
+
+skinparam arrow {
+    Color #2980B9
+    FontColor #000000
+    FontSize 10
+}
+
+frame "Deployment Diagram In-TrackFin" {
+
+    node "<<device>>\nClient System" as ClientSystem {
+        node "<<executionEnvironment>>\nOperating System" as OS {
+            node "<<executionEnvironment>>\nWeb Browser" as Browser {
+            }
+        }
+    }
+
+    node "<<device>>\nWeb Server" as WebServer {
+        node "<<executionEnvironment>>\nWeb Server" as ServerEnv {
+            node "<<executionEnvironment>>\nLaravel" as LaravelEnv {
+                artifact "<<artifact>>\nModul Autentikasi" as ModAuth
+                artifact "<<artifact>>\nModul Kelola Akun" as ModAkun
+                artifact "<<artifact>>\nModul Dashboard" as ModDash
+
+                artifact "<<artifact>>\nModul Kelola Resi" as ModResi
+                artifact "<<artifact>>\nModul Tracking Resi" as ModTracking
+                artifact "<<artifact>>\nModul Kelola Pemasukan" as ModIncome
+
+                artifact "<<artifact>>\nModul Kelola Pengeluaran" as ModExpense
+                artifact "<<artifact>>\nModul Laporan Laba Rugi" as ModReport
+                artifact "<<artifact>>\nModul Export PDF & Excel" as ModExport
+            }
+        }
+    }
+
+    node "<<device>>\nDatabase Server" as DBServer {
+        node "<<executionEnvironment>>\nMySQL" as MySQLEnv {
+            component "<<component>>\nTabel User" as TblUser
+            component "<<component>>\nTabel Resi" as TblResi
+            component "<<component>>\nTabel Pemasukan" as TblIncome
+
+            component "<<component>>\nTabel Pengeluaran" as TblExpense
+            component "<<component>>\nTabel Sesi (Sessions)" as TblSession
+            component "<<component>>\nTabel Antrean (Jobs)" as TblJobs
+        }
+    }
+
+    ClientSystem -[hidden]down-> WebServer
+    DBServer -[hidden]left-> WebServer
+}
+
+' Relasi Antar Node
+ClientSystem ..> WebServer : <<use>>\nHTTPS
+WebServer ..> DBServer : <<use>>\nDatabase Driver
+
+@enduml

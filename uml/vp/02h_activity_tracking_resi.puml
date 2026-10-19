@@ -1,0 +1,39 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Admin Ekspedisi|
+start
+:Buka Menu Tracking / Data Resi;
+
+|Sistem|
+:Menampilkan Halaman Resi & Form Pencarian;
+
+|Admin Ekspedisi|
+:Input Nomor Resi / Pengirim / Penerima;
+:Klik Tombol Cari;
+
+|Sistem|
+:Query Pencarian Data Resi;
+if (Data Ditemukan?) then (Ya)
+    :Tampilkan Hasil Pencarian;
+    |Admin Ekspedisi|
+    :Klik Detail pada Resi;
+    |Sistem|
+    :Query Riwayat & Status Pengiriman;
+    :Tampilkan Detail & Timeline Tracking;
+    |Admin Ekspedisi|
+    :Melihat Status & Riwayat Paket;
+else (Tidak)
+    |Sistem|
+    :Tampilkan Notifikasi "Resi Tidak Ditemukan";
+endif
+
+stop
+@enduml

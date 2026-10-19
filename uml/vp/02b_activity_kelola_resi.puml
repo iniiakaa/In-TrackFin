@@ -1,0 +1,52 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Admin Ekspedisi|
+start
+:Buka Menu Kelola Data Resi;
+
+|Sistem|
+:Menampilkan Daftar Resi;
+
+|Admin Ekspedisi|
+:Pilih Aksi pada Resi;
+
+|Sistem|
+if (Aksi yang Dipilih?) then (Tambah Resi)
+    |Admin Ekspedisi|
+    :Input Data Resi Baru & Simpan;
+    |Sistem|
+    :Validasi & Generate Nomor Resi;
+    :Simpan ke Database;
+else if (Edit Resi)
+    |Admin Ekspedisi|
+    :Ubah Data Resi & Simpan;
+    |Sistem|
+    :Validasi & Perbarui Data di Database;
+else if (Hapus Resi)
+    |Admin Ekspedisi|
+    :Konfirmasi Hapus Data Resi;
+    |Sistem|
+    :Hapus Data dari Database;
+else (Update Status)
+    |Admin Ekspedisi|
+    :Pilih Status Pengiriman Baru;
+    |Sistem|
+    :Update Status Resi di Database;
+    if (Status = Selesai?) then (Ya)
+        :Otomatis Catat Pemasukan\n(Modul Kelola Pemasukan);
+    else (Tidak)
+    endif
+endif
+
+:Tampilkan Notifikasi Sukses;
+:Refresh & Tampilkan Daftar Resi;
+stop
+@enduml

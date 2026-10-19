@@ -1,0 +1,1210 @@
+[
+  {
+    "id": "TC001",
+    "title": "Log in and reach the dashboard summary",
+    "description": "Verifies that an authenticated user can log in and land on the dashboard with the summary visible.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard summary is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent shipment tracking items are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Log in with valid credentials",
+    "description": "A user can sign in with valid credentials and reach the dashboard.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard summary content is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Reject empty login credentials",
+    "description": "Verifies that submitting the login form without credentials shows validation feedback and does not sign the user in.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify required-field validation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the login page"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Reject incorrect login credentials",
+    "description": "A user sees a credentials mismatch message when signing in with invalid credentials.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with invalid@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with invalid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a credentials mismatch message is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Block access to the dashboard without a session",
+    "description": "Verifies that an unauthenticated visitor cannot access the protected dashboard route directly.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard is not displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Log out from an authenticated session",
+    "description": "An authenticated user can end the session and return to the login page.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Log out of the account"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login page is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Require an email on login",
+    "description": "A user cannot submit the login form without an email address and sees validation feedback.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Leave the email field empty"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an email required validation message is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Require a password on login",
+    "description": "A user cannot submit the login form without a password and sees validation feedback.",
+    "category": "Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Leave the password field empty"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a password required validation message is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Create a new resi and see it in the list",
+    "description": "A user can add a new resi record and see it appear in the resi list.",
+    "category": "Tracking Resi",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the resi list"
+      },
+      {
+        "type": "action",
+        "description": "Add a new resi record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new resi appears in the list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Update a resi status and see the change",
+    "description": "A user can change a resi status and see the updated status reflected in the list.",
+    "category": "Tracking Resi",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the resi list"
+      },
+      {
+        "type": "action",
+        "description": "Update the status of an existing resi"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated resi status is visible in the list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Create a new expense record",
+    "description": "Verifies that an authenticated user can add a new operational expense and see it in the list.",
+    "category": "Expense Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the expenses navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Add a new expense record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the expense list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new expense record is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "View dashboard financial summary and recent resi",
+    "description": "A signed-in user can review the dashboard summary and latest resi activity after login.",
+    "category": "Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify financial summary content is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent resi content is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Create a new income record",
+    "description": "Verifies that an authenticated user can add a new income entry and see it in the list.",
+    "category": "Income Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the incomes navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Add a new income record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the income list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new income record is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Edit an existing resi and keep the updated record visible",
+    "description": "A user can edit a resi record and see the saved changes reflected in the list.",
+    "category": "Tracking Resi",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the resi list"
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing resi record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated resi record is visible in the list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Delete an existing resi and remove it from the list",
+    "description": "A user can delete a resi record and see it removed from the resi list.",
+    "category": "Tracking Resi",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the resi list"
+      },
+      {
+        "type": "action",
+        "description": "Delete an existing resi record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the resi list no longer shows the deleted record"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Edit an existing expense record",
+    "description": "Verifies that an authenticated user can update an expense and see the revised data in the list.",
+    "category": "Expense Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the expenses navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing expense record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated expense record is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the expense list remains visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Manage expenses by adding editing and deleting one record",
+    "description": "A user can create, update, and remove an expense record from the expenses page.",
+    "category": "Expense Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the expenses page"
+      },
+      {
+        "type": "action",
+        "description": "Add a new expense record"
+      },
+      {
+        "type": "action",
+        "description": "Edit the expense record"
+      },
+      {
+        "type": "action",
+        "description": "Delete the expense record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the expenses list reflects the deletion"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Delete an expense record",
+    "description": "Verifies that an authenticated user can remove an expense and the list updates afterward.",
+    "category": "Expense Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the expenses navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Delete an existing expense record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the expense list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the deleted expense record is no longer visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Edit an existing income record",
+    "description": "Verifies that an authenticated user can update an income and see the revised data in the list.",
+    "category": "Income Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the incomes navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing income record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated income record is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the income list remains visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "Delete an income record",
+    "description": "Verifies that an authenticated user can remove an income entry and the list updates afterward.",
+    "category": "Income Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the incomes navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Delete an existing income record"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the income list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the deleted income record is no longer visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Branch leader can manage users",
+    "description": "A branch leader can open user management and create, edit, and delete user accounts.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the users page"
+      },
+      {
+        "type": "action",
+        "description": "Create a user account"
+      },
+      {
+        "type": "action",
+        "description": "Edit the user account"
+      },
+      {
+        "type": "action",
+        "description": "Delete the user account"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the users list reflects the changes"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC022",
+    "title": "View financial reports",
+    "description": "A signed-in user can open the reports page and view financial report content.",
+    "category": "Financial Reports",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the reports page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify financial report content is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC023",
+    "title": "View and export the financial report as PDF",
+    "description": "Verifies that an authorized user can open the financial report and export it as PDF.",
+    "category": "Financial Reports",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the reports navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Export the report as PDF"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the financial report is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a PDF export action is available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC024",
+    "title": "View and export the financial report as Excel",
+    "description": "Verifies that an authorized user can open the financial report and export it as Excel.",
+    "category": "Financial Reports",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the reports navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Export the report as Excel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the financial report is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an Excel export action is available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC025",
+    "title": "Branch leader can view the user list",
+    "description": "A branch leader can open user management and see the current list of accounts.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /users"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user management controls are available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC026",
+    "title": "Export a financial report as PDF and Excel",
+    "description": "A signed-in user can export the report in both PDF and Excel formats from the reports page.",
+    "category": "Financial Reports",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the reports page"
+      },
+      {
+        "type": "action",
+        "description": "Export the report as PDF"
+      },
+      {
+        "type": "action",
+        "description": "Export the report as Excel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify report export actions are available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC027",
+    "title": "Branch leader can create a user account",
+    "description": "A branch leader can add a new user account and see it appear in the user list.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /users"
+      },
+      {
+        "type": "action",
+        "description": "Open the add user form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the user name field with Branch User QA"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with branch.user.qa@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Select a staff role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the user form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new user appears in the user list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success confirmation is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC028",
+    "title": "Branch leader can delete a user account",
+    "description": "A branch leader can remove a user account and no longer see it in the list.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /users"
+      },
+      {
+        "type": "action",
+        "description": "Create a user account to delete later"
+      },
+      {
+        "type": "action",
+        "description": "Open the created user account for deletion"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the deletion"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the deleted user no longer appears in the user list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success confirmation is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC029",
+    "title": "Branch leader can edit a user account",
+    "description": "A branch leader can update an existing user account and see the changes reflected in the list.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /users"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing user account for editing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the user name field with Branch User Updated"
+      },
+      {
+        "type": "action",
+        "description": "Select a branch leader role"
+      },
+      {
+        "type": "action",
+        "description": "Submit the user form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated user appears in the user list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success confirmation is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC030",
+    "title": "Prevent staff from accessing user management",
+    "description": "Verifies that a staff user cannot open the user management page.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the users navigation link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to user management is blocked"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user list is not displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC031",
+    "title": "Staff cannot access user management",
+    "description": "A staff user is prevented from opening user management and sees access is denied or redirected.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /users"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user management page is not accessible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an access restriction message or redirect is shown"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC032",
+    "title": "Block staff from accessing user management",
+    "description": "A staff user cannot access the user management page and sees access restricted behavior.",
+    "category": "User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the users page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access restricted content is visible"
+      }
+    ],
+    "priority": "Low"
+  }
+]

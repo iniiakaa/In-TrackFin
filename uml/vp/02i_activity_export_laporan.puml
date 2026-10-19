@@ -1,0 +1,38 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Admin Accounting|
+start
+:Buka Halaman Laporan Laba Rugi;
+
+|Sistem|
+:Menampilkan Laporan & Opsi Export;
+
+|Admin Accounting|
+:Pilih Filter Periode (Hari/Minggu/Bulan);
+:Pilih Format Export;
+
+|Sistem|
+if (Format yang Dipilih?) then (Export PDF)
+    :Query Data Keuangan Sesuai Periode;
+    :Format Dokumen & Render DomPDF;
+    :Generate File PDF;
+    :Kirim File PDF ke Browser (Download);
+else (Export Excel)
+    :Query Data Keuangan Sesuai Periode;
+    :Susun Struktur Spreadsheet / CSV;
+    :Generate File Excel/CSV;
+    :Kirim File Excel ke Browser (Download);
+endif
+
+|Admin Accounting|
+:Menerima & Mengunduh Berkas Laporan;
+stop
+@enduml

@@ -1,0 +1,79 @@
+@startuml
+' Diagram Entity Relationship (ERD) Basis Data In-TrackFin
+hide circle
+hide empty members
+skinparam classAttributeIconSize 0
+
+skinparam roundcorner 5
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam arrowColor #1A5276
+skinparam arrowThickness 1.5
+
+skinparam class {
+    HeaderBackgroundColor #AED6F1
+    BackgroundColor #FDFEFE
+    BorderColor #1A5276
+}
+
+entity "users" as users {
+    **id** : bigint <<PK>>
+    --
+    name : varchar(255)
+    email : varchar(255) <<UNIQUE>>
+    password : varchar(255)
+    role : varchar(255)
+    email_verified_at : timestamp
+    remember_token : varchar(100)
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "resis" as resis {
+    **id** : bigint <<PK>>
+    --
+    **user_id** : bigint <<FK>>
+    nomor_resi : varchar(255) <<UNIQUE>>
+    nama_pengirim : varchar(255)
+    nama_penerima : varchar(255)
+    alamat_tujuan : varchar(255)
+    berat_barang : decimal(10,2)
+    tarif : decimal(15,2)
+    status : enum('tiba_di_cabang', ...)
+    catatan : text
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "incomes" as incomes {
+    **id** : bigint <<PK>>
+    --
+    **user_id** : bigint <<FK>>
+    resi_id : bigint <<FK, NULL>>
+    tanggal : date
+    sumber : varchar(255)
+    nominal : decimal(15,2)
+    keterangan : text
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "expenses" as expenses {
+    **id** : bigint <<PK>>
+    --
+    **user_id** : bigint <<FK>>
+    tanggal : date
+    kategori : varchar(255)
+    nominal : decimal(15,2)
+    keterangan : text
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+' Relasi Kardinalitas Crow's Foot
+users ||--o{ resis : "1 : N (mencatat)"
+users ||--o{ expenses : "1 : N (mencatat)"
+users ||--o{ incomes : "1 : N (mencatat)"
+resis ||--o| incomes : "1 : 0..1 (menghasilkan)"
+
+@enduml

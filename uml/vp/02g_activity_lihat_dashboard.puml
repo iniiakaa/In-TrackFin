@@ -1,0 +1,24 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|User (KC / Admin)|
+start
+:Buka Menu Dashboard;
+
+|Sistem|
+:Query Metrik Ringkasan Hari Ini\n(Paket Masuk, Selesai, Arus Kas, & Laba Rugi);
+:Query Tren Finansial 7 Hari Terakhir;
+:Query Distribusi Status Paket & Resi Terbaru;
+:Render & Tampilkan Halaman Dashboard;
+
+|User (KC / Admin)|
+:Melihat Indikator Kinerja & Grafik Operasional;
+stop
+@enduml

@@ -1,0 +1,77 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Kepala Cabang" as KC
+participant "Browser" as BR
+participant "UserController" as UC
+participant "User Model" as UM
+database "Database" as DB
+
+group Read (Lihat Data Pengguna)
+    KC -> BR : Klik menu Kelola Akun
+    BR -> UC : GET /users
+    UC -> UM : orderBy('role')->orderBy('name')->get()
+    UM -> DB : SELECT * FROM users ORDER BY role, name
+    DB --> UM : Data Pengguna
+    UM --> UC : $users
+    UC -> BR : Tampilkan Daftar Pengguna
+end
+
+group Create (Tambah Pengguna)
+    KC -> BR : Klik Tambah Pengguna
+    BR -> UC : GET /users/create
+    UC -> BR : Tampilkan Form Tambah
+    KC -> BR : Input Data (Nama, Email, Password, Role) & Submit
+    BR -> UC : POST /users
+    UC -> UC : validate(request)
+    UC -> UC : Hash::make($password)
+    UC -> UM : create(data)
+    UM -> DB : INSERT INTO users
+    DB --> UM : OK
+    UC -> BR : Redirect dengan Pesan Sukses
+end
+
+group Update (Edit Pengguna)
+    KC -> BR : Klik Edit pada Pengguna
+    BR -> UC : GET /users/{id}/edit
+    UC -> UM : find($id)
+    UM -> DB : SELECT * FROM users WHERE id = $id
+    DB --> UM : Data User
+    UM --> UC : $user
+    UC -> BR : Tampilkan Form Edit
+    KC -> BR : Ubah Data & Submit
+    BR -> UC : PUT /users/{id}
+    UC -> UC : validate(request)
+    opt Jika password diisi
+        UC -> UC : Hash::make($password)
+    end
+    UC -> UM : update(data)
+    UM -> DB : UPDATE users
+    DB --> UM : OK
+    UC -> BR : Redirect dengan Pesan Sukses
+end
+
+group Delete (Hapus Pengguna)
+    KC -> BR : Klik Hapus pada Pengguna
+    BR -> UC : DELETE /users/{id}
+    alt auth()->id() == $user->id (Akun Sendiri)
+        UC -> BR : Redirect dengan Pesan Error\n("Tidak dapat menghapus akun sendiri")
+    else Bukan Akun Sendiri
+        UC -> UM : delete()
+        UM -> DB : DELETE FROM users WHERE id = $id
+        DB --> UM : OK
+        UC -> BR : Redirect dengan Pesan Sukses
+    end
+end
+
+@enduml

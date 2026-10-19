@@ -1,0 +1,14 @@
+flowchart TD
+    A([Mulai]) --> B[User Mengisi Form Resi Baru]
+    B --> C{Validasi Data Form}
+    C -- Tidak Valid --> D[Tampilkan Pesan Error\nKembali ke Form]
+    C -- Valid --> E[Sistem Generate Nomor Resi\nFormat: CJR-YYYYMMDD-XXXX]
+    E --> F[Simpan Data ke Tabel 'resi']
+    
+    F --> G[Extract 'Tarif' dari Data Resi]
+    G --> H[Simpan Data ke Tabel 'incomes']
+    H -- Set ForeignKey --> I((resi_id di set\nke ID Resi Baru))
+    I --> J[Tampilkan Pesan Sukses]
+    
+    J --> K([Selesai / Redirect ke Detail Resi])
+    D --> B

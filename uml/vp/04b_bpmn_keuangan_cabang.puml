@@ -1,0 +1,26 @@
+@startuml
+title Alur Proses Bisnis Keuangan Cabang (Pendapatan & Pengeluaran)
+
+skinparam style strictuml
+skinparam ActivityBackgroundColor white
+skinparam ActivityBorderColor black
+skinparam ActivityShape roundBox
+skinparam swimlaneBorderColor black
+skinparam swimlaneTitleFontColor black
+
+|Staf Operasional|
+start
+fork
+    : <size:16><&laptop></size> \nMencatat pendapatan operasional\n(Ongkos kirim / Income);
+fork again
+    : <size:16><&laptop></size> \nMencatat pengeluaran operasional\n(BBM, perawatan, biaya taktis);
+end fork
+
+: <size:16><&spreadsheet></size> \nMelakukan rekapitulasi data\npendapatan & pengeluaran;
+: <size:16><&document></size> \nMenyusun Laporan Laba Rugi;
+: <size:16><&envelope-closed></size> \nMenyerahkan laporan\nhasil rekapitulasi;
+
+|Kepala Cabang / Manajemen|
+: <size:16><&person></size> \nMenerima dan meninjau laporan;
+stop
+@enduml

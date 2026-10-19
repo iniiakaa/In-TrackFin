@@ -1,0 +1,56 @@
+@startuml
+' Deployment Diagram In-TrackFin - Style 2 (Model Minimalis 3-Tier)
+scale max 1920 width
+left to right direction
+
+skinparam roundcorner 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam defaultTextAlignment center
+
+skinparam node {
+    BorderColor #000000
+    BackgroundColor #FFFFFF
+    FontColor #000000
+}
+
+skinparam component {
+    BorderColor #000000
+    BackgroundColor #FFFFFF
+    FontColor #000000
+    FontSize 11
+}
+
+skinparam artifact {
+    BorderColor #000000
+    BackgroundColor #FFFFFF
+    FontColor #000000
+    FontSize 11
+}
+
+skinparam arrow {
+    Color #000000
+    FontColor #000000
+    FontSize 10
+}
+
+node "<<device>>\nClient" as Client {
+    artifact "<<artifact>>\nWeb Browser" as Browser
+}
+
+node "<<device>>\nWeb Server" as WebServer {
+    node "<<executionEnvironment>>\nPhp" as PHPEnv {
+        component "<<component>>\nApplication Logic" as AppLogic
+        component "<<component>>\nRouter Handler" as RouterHandler
+    }
+}
+
+node "<<device>>\nDB Server" as DBServer {
+    artifact "<<artifact>>\nMySQL" as MySQL
+}
+
+' Relasi
+Client ..> WebServer : <<use>>\nHTTP
+WebServer ..> DBServer : <<use>>\nPhp Data Object
+
+@enduml

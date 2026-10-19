@@ -1,0 +1,53 @@
+erDiagram
+    USERS ||--o{ RESI : creates_and_manages
+    USERS ||--o{ INCOMES : logs
+    USERS ||--o{ EXPENSES : logs
+    RESI ||--o| INCOMES : generates
+
+    USERS {
+        bigint id PK
+        string name
+        string email
+        string password
+        enum role "admin, kepala_cabang"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    RESI {
+        bigint id PK
+        string nomor_resi "Misal: CJR-20240315-0001"
+        string nama_pengirim
+        string nama_penerima
+        text alamat_tujuan
+        decimal berat_barang
+        decimal tarif
+        enum status "tiba_di_cabang, sedang_diproses, dibawa_kurir, selesai"
+        string catatan "Nullable"
+        bigint user_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    INCOMES {
+        bigint id PK
+        date tanggal
+        string sumber "Cth: Ongkos Kirim (CJR-...)"
+        decimal nominal
+        string keterangan
+        bigint resi_id FK "Nullable"
+        bigint user_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    EXPENSES {
+        bigint id PK
+        date tanggal
+        string kategori "Operasional, BBM, Gaji, dll"
+        decimal nominal
+        string keterangan
+        bigint user_id FK
+        timestamp created_at
+        timestamp updated_at
+    }

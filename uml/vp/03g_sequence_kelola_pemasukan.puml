@@ -1,0 +1,118 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Admin Accounting" as AA
+participant "Browser" as BR
+participant "IncomeController" as IC
+participant "Income Model" as IM
+database "Database" as DB
+
+group Read (Lihat Data Pemasukan)
+    AA -> BR : Klik menu Kelola Pemasukan
+    BR -> IC : GET /incomes
+    activate IC
+    IC -> IM : latest('tanggal')->paginate(15)
+    activate IM
+    IM -> DB : SELECT * FROM incomes ORDER BY tanggal DESC
+    activate DB
+    DB --> IM : Data Pemasukan
+    deactivate DB
+    IM --> IC : $incomes
+    deactivate IM
+    IC -> BR : Tampilkan Daftar Pemasukan (Sumber Resi & Manual)
+    deactivate IC
+    BR --> AA : Halaman Daftar Pemasukan
+end
+
+group Create (Tambah Pemasukan Manual)
+    AA -> BR : Klik Tambah Pemasukan
+    BR -> IC : GET /incomes/create
+    activate IC
+    IC -> BR : Tampilkan Form Tambah
+    deactivate IC
+    AA -> BR : Input Data (Tanggal, Nominal, Keterangan) & Submit
+    BR -> IC : POST /incomes
+    activate IC
+    IC -> IC : validate(request)
+    IC -> IC : set sumber = 'lainnya'
+    IC -> IM : create(data)
+    activate IM
+    IM -> DB : INSERT INTO incomes
+    activate DB
+    DB --> IM : OK
+    deactivate DB
+    IM --> IC : OK
+    deactivate IM
+    IC -> BR : Redirect dengan Pesan Sukses
+    deactivate IC
+    BR --> AA : Notifikasi Sukses & Daftar Pemasukan Terkini
+end
+
+group Update (Edit Pemasukan)
+    AA -> BR : Klik Edit pada Pemasukan
+    BR -> IC : GET /incomes/{id}/edit
+    activate IC
+    IC -> IM : find($id)
+    activate IM
+    IM -> DB : SELECT * FROM incomes WHERE id = $id
+    activate DB
+    DB --> IM : Data Pemasukan
+    deactivate DB
+    IM --> IC : $income
+    deactivate IM
+    alt income->sumber == 'resi' (Data Terkunci)
+        IC -> BR : Redirect dengan Pesan Error\n("Pemasukan dari resi tidak bisa diedit langsung")
+        BR --> AA : Pesan Peringatan (Aksi Ditolak)
+    else income->sumber == 'lainnya' (Manual)
+        IC -> BR : Tampilkan Form Edit
+        AA -> BR : Ubah Data & Submit
+        BR -> IC : PUT /incomes/{id}
+        IC -> IC : validate(request)
+        IC -> IM : update(data)
+        activate IM
+        IM -> DB : UPDATE incomes SET ... WHERE id = $id
+        activate DB
+        DB --> IM : OK
+        deactivate DB
+        IM --> IC : OK
+        deactivate IM
+        IC -> BR : Redirect dengan Pesan Sukses
+        BR --> AA : Notifikasi Sukses & Daftar Terkini
+    end
+    deactivate IC
+end
+
+group Delete (Hapus Pemasukan)
+    AA -> BR : Klik Hapus pada Pemasukan
+    BR -> IC : DELETE /incomes/{id}
+    activate IC
+    IC -> IM : find($id)
+    alt income->sumber == 'resi' (Data Terkunci)
+        IC -> BR : Redirect dengan Pesan Error\n("Pemasukan dari resi tidak bisa dihapus langsung")
+        BR --> AA : Pesan Peringatan (Aksi Ditolak)
+    else income->sumber == 'lainnya' (Manual)
+        IC -> IM : delete()
+        activate IM
+        IM -> DB : DELETE FROM incomes WHERE id = $id
+        activate DB
+        DB --> IM : OK
+        deactivate DB
+        IM --> IC : OK
+        deactivate IM
+        IC -> BR : Redirect dengan Pesan Sukses
+        BR --> AA : Notifikasi Sukses & Daftar Terkini
+    end
+    deactivate IC
+end
+
+@enduml

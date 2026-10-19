@@ -1,0 +1,51 @@
+@startuml
+skinparam usecase {
+    BackgroundColor #AED6F1
+    BorderColor #1A5276
+    ArrowColor #1A5276
+    ActorBorderColor #1A5276
+    ActorBackgroundColor #FDFEFE
+}
+skinparam rectangleBorderColor #1A5276
+skinparam rectangleBackgroundColor #FDFEFE
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+left to right direction
+
+actor "Kepala Cabang" as KC
+actor "Admin Accounting" as AA
+actor "Admin Ekspedisi" as AE
+
+rectangle "In-TrackFin" {
+    usecase "Autentikasi" as UC_Auth
+    usecase "Kelola akun" as UC_Akun
+    usecase "Lihat Dashboard" as UC_Dash
+    usecase "Lihat data resi" as UC_LihatResi
+    usecase "Kelola data resi" as UC_KelolaResi
+    usecase "Kelola Pemasukan" as UC_Pemasukan
+    usecase "Laporan laba rugi" as UC_Laporan
+    usecase "Export PDF/Excel\nextension points\nLaporan laba rugi" as UC_Export
+    usecase "kelola pengeluaran" as UC_Pengeluaran
+}
+
+KC --> UC_Auth
+KC --> UC_Akun
+KC --> UC_Dash
+KC --> UC_Laporan
+
+AA --> UC_Auth
+AA --> UC_Dash
+AA --> UC_Laporan
+AA --> UC_Pemasukan
+AA --> UC_Pengeluaran
+
+AE --> UC_Auth
+AE --> UC_Dash
+AE --> UC_KelolaResi
+
+UC_KelolaResi ..> UC_LihatResi : <<Include>>
+UC_KelolaResi ..> UC_Pemasukan : <<Include>>
+UC_Laporan ..> UC_Export : <<Extend>>
+
+@enduml

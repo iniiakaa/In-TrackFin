@@ -1,0 +1,51 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 280
+
+|Admin Accounting|
+start
+:Buka Menu Kelola Pemasukan;
+
+|Sistem|
+:Menampilkan Daftar Pemasukan\n(Sumber Resi & Manual);
+
+|Admin Accounting|
+:Pilih Aksi pada Pemasukan;
+
+|Sistem|
+if (Aksi yang Dipilih?) then (Tambah Pemasukan Manual)
+    |Admin Accounting|
+    :Input Tanggal, Nominal, & Keterangan;
+    |Sistem|
+    :Validasi Input & Set Sumber 'Lainnya';
+    :Simpan Pemasukan ke Database;
+else if (Edit Pemasukan)
+    |Admin Accounting|
+    :Ubah Data Pemasukan & Simpan;
+    |Sistem|
+    if (Sumber == Resi?) then (Ya)
+        :Tampilkan Pesan Error\n(Data Resi Terkunci);
+    else (Tidak)
+        :Validasi & Perbarui Data di Database;
+    endif
+else (Hapus Pemasukan)
+    |Admin Accounting|
+    :Konfirmasi Hapus Pemasukan;
+    |Sistem|
+    if (Sumber == Resi?) then (Ya)
+        :Tampilkan Pesan Error\n(Data Resi Terkunci);
+    else (Tidak)
+        :Hapus Data dari Database;
+    endif
+endif
+
+:Tampilkan Notifikasi;
+:Refresh & Tampilkan Daftar Pemasukan;
+stop
+@enduml

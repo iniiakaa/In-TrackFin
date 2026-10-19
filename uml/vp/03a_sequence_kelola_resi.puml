@@ -1,0 +1,77 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Admin Ekspedisi" as AE
+participant "Browser" as BR
+participant "ResiController" as RC
+participant "Resi Model" as RM
+participant "Income Model" as IM
+database "Database" as DB
+
+group Read (Lihat Data Resi)
+    AE -> BR : Klik menu Kelola Data Resi
+    BR -> RC : GET /resi
+    RC -> RM : all()
+    RM -> DB : SELECT * FROM resi
+    DB --> RM : Data Resi
+    RM --> RC : $resis
+    RC -> BR : Tampilkan Daftar Resi
+end
+
+group Create (Tambah Resi)
+    AE -> BR : Klik Tambah Resi
+    BR -> RC : GET /resi/create
+    RC -> BR : Tampilkan Form Tambah
+    AE -> BR : Input Data & Simpan
+    BR -> RC : POST /resi
+    RC -> RM : generateNomorResi()
+    RC -> RM : create(data)
+    RM -> DB : INSERT INTO resi
+    DB --> RM : OK
+    RC -> BR : Redirect dengan Pesan Sukses
+end
+
+group Update (Edit Resi)
+    AE -> BR : Klik Edit pada Resi
+    BR -> RC : GET /resi/{id}/edit
+    RC -> BR : Tampilkan Form Edit
+    AE -> BR : Ubah Data & Simpan
+    BR -> RC : PUT /resi/{id}
+    RC -> RM : update(data)
+    RM -> DB : UPDATE resi
+    DB --> RM : OK
+    RC -> BR : Redirect dengan Pesan Sukses
+end
+
+group Delete (Hapus Resi)
+    AE -> BR : Klik Hapus pada Resi
+    BR -> RC : DELETE /resi/{id}
+    RC -> RM : delete()
+    RM -> DB : DELETE FROM resi
+    DB --> RM : OK
+    RC -> BR : Redirect dengan Pesan Sukses
+end
+
+group Update Status & Kelola Pemasukan (Include)
+    AE -> BR : Update Status menjadi Selesai
+    BR -> RC : PATCH /resi/{id}/status
+    RC -> RM : update(['status' => 'selesai'])
+    RM -> DB : UPDATE resi
+    DB --> RM : OK
+    RC -> IM : create(data pemasukan)
+    IM -> DB : INSERT INTO incomes
+    DB --> IM : OK
+    RC -> BR : Redirect dengan Pesan Sukses
+end
+
+@enduml

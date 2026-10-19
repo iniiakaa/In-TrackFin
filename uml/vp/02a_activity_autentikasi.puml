@@ -1,0 +1,41 @@
+@startuml
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #1A5276
+skinparam activityDiamondBackgroundColor #F9E79F
+skinparam activityDiamondBorderColor #1A5276
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam swimlaneWidth 300
+
+|User|
+start
+:Buka Halaman Login;
+
+|System|
+:Menampilkan Form Login;
+
+|User|
+:Input Email dan Password;
+:Klik Login;
+
+|System|
+:Verifikasi Kredensial;
+
+if (Kredensial Valid?) then (Ya)
+    :Buat Session Auth;
+    :Redirect ke Dashboard;
+    |User|
+    :Melakukan aktivitas...;
+    :Klik Logout;
+    |System|
+    :Hapus Session;
+    :Redirect ke Halaman Login;
+else (Tidak)
+    :Tampilkan Pesan Error;
+    |User|
+    :Input Ulang Kredensial;
+endif
+
+stop
+@enduml

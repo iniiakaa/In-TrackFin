@@ -1,0 +1,130 @@
+@startuml
+title Deployment Diagram - Sistem Informasi In-TrackFin
+scale max 1920 width
+
+skinparam roundcorner 6
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam defaultTextAlignment center
+skinparam arrowColor #1A5276
+skinparam arrowThickness 1.5
+
+skinparam actor {
+    BackgroundColor #FDFEFE
+    BorderColor #1A5276
+}
+
+skinparam node {
+    BackgroundColor #FDFEFE
+    BorderColor #1A5276
+}
+
+skinparam component {
+    BackgroundColor #EBF5FB
+    BorderColor #1A5276
+}
+
+skinparam artifact {
+    BackgroundColor #FFFFFF
+    BorderColor #1A5276
+}
+
+skinparam database {
+    BackgroundColor #AED6F1
+    BorderColor #1A5276
+}
+
+skinparam cloud {
+    BackgroundColor #EBF5FB
+    BorderColor #1A5276
+}
+
+skinparam frame {
+    BackgroundColor #F9FAFB
+    BorderColor #1A5276
+}
+
+' ==========================================
+' ACTOR LAYER
+' ==========================================
+actor "Kepala Cabang\n<<Actor>>" as KC
+actor "Admin Ekspedisi\n<<Actor>>" as AE
+actor "Admin Accounting\n<<Actor>>" as AA
+
+' ==========================================
+' CLIENT TIER
+' ==========================================
+node "<<device>>\nClient Workstation\n(PC / Laptop Klien)" as ClientDevice {
+    node "<<execution environment>>\nWeb Browser\n(Google Chrome / Mozilla Firefox / Microsoft Edge)" as Browser {
+        component "<<component>>\nWeb User Interface\n(Blade Views & Tailwind CSS)" as WebUI
+        component "<<component>>\nClient Script & Assets\n(Vite Compiled JS Bundle)" as ClientJS
+    }
+}
+
+KC --> WebUI : Monitoring Dashboard\n& Kelola Akun
+AE --> WebUI : Kelola Data Resi\n& Update Status Tracking
+AA --> WebUI : Transaksi Keuangan\n& Export Laporan Laba Rugi
+
+' ==========================================
+' NETWORK LAYER
+' ==========================================
+cloud "Jaringan Komunikasi\n(Internet / Intranet LAN Kantor)" as Network
+
+ClientDevice -down-> Network : <<protocol>>\nHTTPS (Port 443) / HTTP (Port 80)
+
+' ==========================================
+' WEB & APPLICATION SERVER TIER
+' ==========================================
+node "<<device>>\nWeb & Application Server\n(Linux Ubuntu Server / Herd Environment)" as AppServer {
+    
+    node "<<execution environment>>\nNginx Web Server" as Nginx {
+        component "<<component>>\nReverse Proxy &\nSSL Termination Engine" as ReverseProxy
+        artifact "<<artifact>>\nStatic Assets Directory\n(/public/build: CSS, JS, Media)" as StaticAssets
+    }
+
+    node "<<execution environment>>\nPHP 8.2+ Runtime (PHP-FPM)" as PHPEnv {
+        frame "Laravel 12 Application Engine\n(In-TrackFin Core)" as LaravelApp {
+            component "<<component>>\nRouting & Middleware Layer\n(Auth Guard & Role RBAC)" as Router
+            component "<<component>>\nController Subsystem\n(Resi, Income, Expense, Report, User, Dashboard)" as Controllers
+            component "<<component>>\nBusiness Logic & Eloquent ORM\n(Resi, Income, Expense, User Models)" as ORM
+            component "<<component>>\nDocument Exporter Engine\n(Barryvdh DomPDF & CSV Exporter)" as Exporter
+            component "<<component>>\nTask Queue & Worker Listener\n(Database Queue Worker Service)" as QueueWorker
+        }
+    }
+
+    node "<<file system>>\nServer Storage Disk" as LocalDisk {
+        artifact "<<directory>>\nstorage/app/public\n(Uploads, Bukti Transaksi & PDF Cache)" as StorageDir
+    }
+}
+
+Network -down-> ReverseProxy : Inbound Requests\n[Port 443 / 80]
+ReverseProxy ..> StaticAssets : Direct Static File Delivery
+ReverseProxy -right-> Router : FastCGI Protocol\n[127.0.0.1:9000 / Unix Socket]
+
+Router -down-> Controllers : Dispatch Request
+Controllers -down-> ORM : CRUD & Model Processing
+Controllers -right-> Exporter : Generate PDF & Spreadsheet
+Controllers -right-> StorageDir : Read / Write File I/O
+QueueWorker -left-> ORM : Asynchronous Job Execution
+
+' ==========================================
+' DATABASE SERVER TIER
+' ==========================================
+node "<<device>>\nDatabase Server\n(Dedicated Server / Host Environment)" as DBServer {
+    node "<<execution environment>>\nMySQL 8.x DBMS" as MySQL {
+        database "<<database>>\nintrackfindb" as DB {
+            artifact "<<table>> users\n(Data Pengguna & Hak Akses)" as TblUsers
+            artifact "<<table>> resis\n(Data Resi, Pengirim, Penerima & Status)" as TblResi
+            artifact "<<table>> incomes\n(Pencatatan Pemasukan & Relasi Resi)" as TblIncome
+            artifact "<<table>> expenses\n(Pencatatan Pengeluaran Operasional)" as TblExpense
+            artifact "<<table>> sessions & jobs\n(Sesi Autentikasi & Antrean Tugas)" as TblSys
+        }
+    }
+}
+
+' Relasi Antar Server (App Server ke Database Server)
+AppServer -[hidden]down-> DBServer
+ORM -down-> DB : MySQL Protocol (PDO TCP/IP)\n[Port 3306]
+QueueWorker -down-> DB : Polling Antrean Tugas (Queue DB)\n[Port 3306]
+
+@enduml

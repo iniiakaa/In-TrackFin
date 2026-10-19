@@ -1,0 +1,108 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Admin Accounting" as AA
+participant "Browser" as BR
+participant "ExpenseController" as EC
+participant "Expense Model" as EM
+database "Database" as DB
+
+group Read (Lihat Data Pengeluaran)
+    AA -> BR : Klik menu Kelola Pengeluaran
+    BR -> EC : GET /expenses
+    activate EC
+    EC -> EM : latest('tanggal')->paginate(15)
+    activate EM
+    EM -> DB : SELECT * FROM expenses ORDER BY tanggal DESC
+    activate DB
+    DB --> EM : Data Pengeluaran
+    deactivate DB
+    EM --> EC : $expenses
+    deactivate EM
+    EC -> BR : Tampilkan Daftar Pengeluaran
+    deactivate EC
+    BR --> AA : Halaman Daftar Pengeluaran
+end
+
+group Create (Tambah Pengeluaran)
+    AA -> BR : Klik Tambah Pengeluaran
+    BR -> EC : GET /expenses/create
+    activate EC
+    EC -> BR : Tampilkan Form Tambah
+    deactivate EC
+    AA -> BR : Input Data (Tanggal, Kategori, Nominal, Keterangan) & Submit
+    BR -> EC : POST /expenses
+    activate EC
+    EC -> EC : validate(request)
+    EC -> EM : create(data)
+    activate EM
+    EM -> DB : INSERT INTO expenses
+    activate DB
+    DB --> EM : OK
+    deactivate DB
+    EM --> EC : OK
+    deactivate EM
+    EC -> BR : Redirect dengan Pesan Sukses
+    deactivate EC
+    BR --> AA : Notifikasi Sukses & Daftar Pengeluaran Terkini
+end
+
+group Update (Edit Pengeluaran)
+    AA -> BR : Klik Edit pada Pengeluaran
+    BR -> EC : GET /expenses/{id}/edit
+    activate EC
+    EC -> EM : find($id)
+    activate EM
+    EM -> DB : SELECT * FROM expenses WHERE id = $id
+    activate DB
+    DB --> EM : Data Pengeluaran
+    deactivate DB
+    EM --> EC : $expense
+    deactivate EM
+    EC -> BR : Tampilkan Form Edit
+    deactivate EC
+    AA -> BR : Ubah Data & Submit
+    BR -> EC : PUT /expenses/{id}
+    activate EC
+    EC -> EC : validate(request)
+    EC -> EM : update(data)
+    activate EM
+    EM -> DB : UPDATE expenses SET ... WHERE id = $id
+    activate DB
+    DB --> EM : OK
+    deactivate DB
+    EM --> EC : OK
+    deactivate EM
+    EC -> BR : Redirect dengan Pesan Sukses
+    deactivate EC
+    BR --> AA : Notifikasi Sukses & Daftar Pengeluaran Terkini
+end
+
+group Delete (Hapus Pengeluaran)
+    AA -> BR : Klik Hapus pada Pengeluaran
+    BR -> EC : DELETE /expenses/{id}
+    activate EC
+    EC -> EM : delete()
+    activate EM
+    EM -> DB : DELETE FROM expenses WHERE id = $id
+    activate DB
+    DB --> EM : OK
+    deactivate DB
+    EM --> EC : OK
+    deactivate EM
+    EC -> BR : Redirect dengan Pesan Sukses
+    deactivate EC
+    BR --> AA : Notifikasi Sukses & Daftar Pengeluaran Terkini
+end
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+skinparam sequenceArrowThickness 1.5
+skinparam roundcorner 5
+skinparam sequenceParticipantBorderColor #1A5276
+skinparam sequenceParticipantBackgroundColor #AED6F1
+skinparam sequenceActorBorderColor #1A5276
+skinparam sequenceActorBackgroundColor #FDFEFE
+skinparam sequenceGroupBorderColor #E67E22
+skinparam sequenceGroupBackgroundColor #FDEBD0
+skinparam arrowColor #1A5276
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+actor "Admin Accounting" as AA
+participant "Browser" as BR
+participant "ReportController" as RC
+participant "Income Model" as IM
+participant "Expense Model" as EM
+database "Database" as DB
+
+group Tampilkan Laporan
+    AA -> BR : Buka Laporan Laba Rugi
+    BR -> RC : GET /reports?filter=...
+    RC -> IM : get() (berdasarkan filter)
+    IM -> DB : SELECT * FROM incomes
+    DB --> IM : Data Pemasukan
+    RC -> EM : get() (berdasarkan filter)
+    EM -> DB : SELECT * FROM expenses
+    DB --> EM : Data Pengeluaran
+    RC -> RC : Hitung Laba/Rugi
+    RC -> BR : Tampilkan Data Laporan
+    BR --> AA : Lihat Laporan
+end
+
+group Export Laporan (Extend)
+    AA -> BR : Klik Export (PDF/Excel)
+    BR -> RC : GET /reports/export?type=...
+    RC -> RC : Format Data ke PDF/Excel
+    RC -> BR : Response Download File
+    BR --> AA : File ter-download
+end
+
+@enduml
